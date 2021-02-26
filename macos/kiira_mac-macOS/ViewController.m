@@ -12,7 +12,8 @@
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge moduleName:@"kiira_mac" initialProperties:nil];
 
   NSView *view = [self view];
-
+  view.frame = CGRectMake(10, 10, 1200, 800);
+  
   [view addSubview:rootView];
   [rootView setBackgroundColor:[NSColor windowBackgroundColor]];
   [rootView setFrame:[view bounds]];
