@@ -1,11 +1,15 @@
 import {StyleSheet} from 'react-native';
+import {colors} from '../../utils/constants';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.lightBlue,
     alignItems: 'center',
     justifyContent: 'center',
+    // borderRadius: 5,
+    borderColor: colors.blueGrey,
+    borderWidth: 3,
   },
 
   image: {
@@ -13,7 +17,7 @@ const styles = StyleSheet.create({
   },
 
   inputView: {
-    // borderRadius: 30,
+    backgroundColor: colors.lightPurple,
     width: '30%',
     height: 45,
     marginBottom: 20,

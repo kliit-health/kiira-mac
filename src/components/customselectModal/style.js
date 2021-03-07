@@ -1,83 +1,82 @@
-import { StyleSheet } from "react-native";
-import Constant from "../../utils/constants";
-import metrics from "../../utils/metrices";
+import {StyleSheet} from 'react-native';
+import {text, colors, metrics} from '../../utils/constants';
 
 export default StyleSheet.create({
   cancelSelectStateButtonTextStyle: {
-    fontFamily: Constant.App.fontFamily.bodyRegular,
-    color: Constant.App.colors.whiteColor,
-    textAlign: "center",
-    fontSize: Constant.App.textSize.Normal,
+    fontFamily: text.fontFamily.poppinsRegular,
+    color: colors.white,
+    textAlign: 'center',
+    fontSize: text.size.regular,
   },
 
   cancelSelectStateButtonStyle: {
-    backgroundColor: Constant.App.colors.blueColor,
+    backgroundColor: colors.blue,
     padding: 15,
-    width: metrics.DEVICE_WIDTH * 0.9,
+    width: metrics.width * 0.9,
   },
 
   emptyContainerStyle: {
     padding: 15,
-    width: metrics.DEVICE_WIDTH * 0.9,
-    justifyContent: "center",
-    alignItems: "center",
+    width: metrics.width * 0.9,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   emptyTextStyle: {
-    fontFamily: Constant.App.fontFamily.headerRegular,
-    color: Constant.App.colors.blackColor,
-    fontSize: Constant.App.textSize.Large,
+    fontFamily: text.fontFamily.poppinsBold,
+    color: colors.black,
+    fontSize: text.size.large,
   },
 
   modalParentContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
 
   modalSelectStateContainer: {
     marginTop: 40,
     marginBottom: 20,
-    alignSelf: "center",
-    justifyContent: "center",
-    alignItems: "center",
-    flexWrap: "wrap",
-    width: metrics.DEVICE_WIDTH * 0.9,
-    backgroundColor: Constant.App.colors.whiteColor,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    width: metrics.width * 0.9,
+    backgroundColor: colors.white,
   },
 
   searchBarContaineStyle: {
-    width: metrics.DEVICE_WIDTH * 0.9,
-    backgroundColor: Constant.App.colors.whiteColor,
+    width: metrics.width * 0.9,
+    backgroundColor: colors.white,
   },
 
   searchBarInputContainerStyle: {
-    backgroundColor: Constant.App.colors.whiteColor,
+    backgroundColor: colors.whiteColor,
   },
 
   searchBarInputTextStyle: {
-    fontFamily: Constant.App.fontFamily.headerRegular,
-    color: Constant.App.colors.blackColor,
-    fontSize: Constant.App.textSize.Normal,
+    fontFamily: text.fontFamily.poppinsRegular,
+    color: colors.black,
+    fontSize: text.size.regular,
   },
 
   saparatorStyle: {
-    borderBottomColor: Constant.App.colors.lightGrey,
+    borderBottomColor: colors.lightGrey,
     borderBottomWidth: 0.5,
-    width: metrics.DEVICE_WIDTH * 0.9,
+    width: metrics.width * 0.9,
   },
 
   stateTextContainerStyle: {
-    flexDirection: "column",
-    justifyContent: "center",
+    flexDirection: 'column',
+    justifyContent: 'center',
     padding: 10,
   },
 
   stateTextStyle: {
-    fontFamily: Constant.App.fontFamily.bodyRegular,
-    alignSelf: "center",
-    color: Constant.App.colors.blackColor,
-    fontSize: Constant.App.textSize.Normal,
+    fontFamily: text.fontFamily.poppinsRegular,
+    alignSelf: 'center',
+    color: colors.black,
+    fontSize: text.size.regular,
   },
 });

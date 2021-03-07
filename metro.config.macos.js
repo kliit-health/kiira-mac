@@ -16,4 +16,13 @@ module.exports = {
     platforms: ['macos', 'ios', 'android'],
     blacklistRE: blacklist([/node_modules\/react-native\/.*/]),
   },
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: false,
+      },
+    }),
+    babelTransformerPath: require.resolve('react-native-svg-transformer'),
+  },
 };

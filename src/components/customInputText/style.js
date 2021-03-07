@@ -1,16 +1,16 @@
 import {StyleSheet} from 'react-native';
-import Constant from '../../utils/constants';
+import {text, colors} from '../../utils/constants';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Constant.App.colors.whiteColor,
+    backgroundColor: colors.white,
     justifyContent: 'center',
   },
 
   fieldLabel: {
-    fontSize: Constant.App.textSize.Small,
-    color: Constant.App.colors.blackColor,
+    fontSize: text.size.small,
+    color: colors.black,
     fontWeight: '100',
   },
 
@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
   },
 
   valueText: {
-    fontSize: Constant.App.textSize.Normal,
-    color: Constant.App.colors.blackColor,
+    fontSize: text.size.regular,
+    color: colors.black,
     paddingTop: 20,
   },
 });

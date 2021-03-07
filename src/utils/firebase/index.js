@@ -15,6 +15,8 @@ let firebase = {
   functions: app.functions,
 };
 
+export const {auth, firestore} = firebase;
+
 // export function getPlans(plan) {
 //   try {
 //     let planRef = firebase.firestore().doc(`plans/${plan}`).get();
@@ -167,31 +169,31 @@ export function loginInWithFirebase(obj) {
 //   }
 // }
 
-// export async function getAppointmentsAsync(uid) {
-//   try {
-//     const document = firebase.firestore().collection('appointments').doc(uid);
-//     const appointments = await document.get();
-//     return appointments.data();
-//   } catch (error) {
-//     return error;
-//   }
-// }
+export async function getAppointmentsAsync(uid) {
+  try {
+    const document = firebase.firestore().collection('appointments').doc(uid);
+    const appointments = await document.get();
+    return appointments.data();
+  } catch (error) {
+    return error;
+  }
+}
 
-// export async function getAppointmentsByDayAsync(data) {
-//   try {
-//     const {calendarID, monthNumber, day, year} = data;
+export async function getAppointmentsByDayAsync(data) {
+  try {
+    const {calendarID, monthNumber, day, year} = data;
 
-//     let response = {};
-//     await fetch(
-//       `https://us-central1-kiira-health-app.cloudfunctions.net/appointmentGetByDay?calendarID=${calendarID}&date=${year}-${monthNumber}-${day}`,
-//     )
-//       .then((res) => res.json())
-//       .then((data) => (response.future = data));
-//     return response;
-//   } catch (error) {
-//     return error;
-//   }
-// }
+    let response = {};
+    await fetch(
+      `https://us-central1-kiira-health-app.cloudfunctions.net/appointmentGetByDay?calendarID=${calendarID}&date=${year}-${monthNumber}-${day}`,
+    )
+      .then((res) => res.json())
+      .then((data) => (response.future = data));
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
 
 // export async function getAppointmentsForTodayAsync(data) {
 //   try {
@@ -360,54 +362,54 @@ export function loginInWithFirebase(obj) {
 //   }
 // }
 
-// export async function cancelAppointmentAsync({data: {id, uid, expert}}) {
-//   try {
-//     return await fetch(
-//       `https://us-central1-kiira-health-app.cloudfunctions.net/appointmentCancel?&id=${id}`,
-//     )
-//       .then((res) => {
-//         let response = res.json();
-//         return response;
-//       })
-//       .then(async (res) => {
-//         if (res.body.error) {
-//           return res.body;
-//         }
+export async function cancelAppointmentAsync({data: {id, uid, expert}}) {
+  try {
+    return await fetch(
+      `https://us-central1-kiira-health-app.cloudfunctions.net/appointmentCancel?&id=${id}`,
+    )
+      .then((res) => {
+        let response = res.json();
+        return response;
+      })
+      .then(async (res) => {
+        if (res.body.error) {
+          return res.body;
+        }
 
-//         const document = firestore.collection('appointments').doc(uid);
-//         const response = await document.get();
-//         let appointments = response.data();
-//         appointments.history = appointments.history.filter(
-//           (item) => item.id !== id,
-//         );
+        const document = firestore.collection('appointments').doc(uid);
+        const response = await document.get();
+        let appointments = response.data();
+        appointments.history = appointments.history.filter(
+          (item) => item.id !== id,
+        );
 
-//         await document.set(
-//           {history: [...(appointments.history || [])]},
-//           {merge: true},
-//         );
+        await document.set(
+          {history: [...(appointments.history || [])]},
+          {merge: true},
+        );
 
-//         const expertDocument = firestore
-//           .collection('appointments')
-//           .doc(expert.uid);
-//         const expertResponse = await expertDocument.get();
-//         let expertAppointments = expertResponse.data();
-//         let filtered = expertAppointments.history[uid].filter((item) => {
-//           return item.id !== id ? item : false;
-//         });
+        const expertDocument = firestore
+          .collection('appointments')
+          .doc(expert.uid);
+        const expertResponse = await expertDocument.get();
+        let expertAppointments = expertResponse.data();
+        let filtered = expertAppointments.history[uid].filter((item) => {
+          return item.id !== id ? item : false;
+        });
 
-//         await expertDocument.set(
-//           {history: {[uid]: [...(filtered || [])]}},
-//           {merge: true},
-//         );
-//       })
-//       .catch((error) => {
-//         console.error(error);
-//       });
-//   } catch (error) {
-//     console.log('Cancel Error', error);
-//     return error;
-//   }
-// }
+        await expertDocument.set(
+          {history: {[uid]: [...(filtered || [])]}},
+          {merge: true},
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.log('Cancel Error', error);
+    return error;
+  }
+}
 
 // export async function changeAppointmentAsync({data}) {
 //   const {id, time, uid, expert} = data;
@@ -460,88 +462,88 @@ export function loginInWithFirebase(obj) {
 //   }
 // }
 
-// export function addUserData(obj) {
-//   try {
-//     return firebase
-//       .firestore()
-//       .collection('users')
-//       .where('uid', '==', obj.uid)
-//       .get()
-//       .then((querySnapshot) => {
-//         var userData;
-//         querySnapshot.docs.forEach((element) => {
-//           userData = element.data();
-//         });
-//         return userData
-//           ? firebase
-//               .firestore()
-//               .collection('users')
-//               .doc(obj.uid)
-//               .update(obj)
-//               .then(
-//                 function () {
-//                   const data = {
-//                     success: true,
-//                   };
-//                   return data;
-//                 },
-//                 (error) => {
-//                   const {message, code} = error;
-//                   displayConsole('error message', message);
-//                   displayConsole('error code', code);
-//                   const data = {
-//                     success: false,
-//                     message: message,
-//                   };
-//                   return data;
-//                 },
-//               )
-//           : firebase
-//               .firestore()
-//               .collection('users')
-//               .doc(obj.uid)
-//               .set(obj)
-//               .then(
-//                 function () {
-//                   const data = {
-//                     success: true,
-//                   };
-//                   return data;
-//                 },
-//                 (error) => {
-//                   const {message, code} = error;
-//                   displayConsole('error message', message);
-//                   displayConsole('error code', code);
-//                   const data = {
-//                     success: false,
-//                     message: message,
-//                   };
-//                   return data;
-//                 },
-//               );
-//       })
-//       .catch((error) => {
-//         const {message, code} = error;
-//         displayConsole('error message', message);
-//         displayConsole('error code', code);
-//         const data = {
-//           success: false,
-//           message: message,
-//         };
-//         return data;
-//       });
-//   } catch (error) {
-//     const data = {
-//       success: false,
-//     };
-//     displayConsole('Crash error', error);
-//     return data;
-//   }
-// }
+export function addUserData(obj) {
+  try {
+    return firebase
+      .firestore()
+      .collection('users')
+      .where('uid', '==', obj.uid)
+      .get()
+      .then((querySnapshot) => {
+        var userData;
+        querySnapshot.docs.forEach((element) => {
+          userData = element.data();
+        });
+        return userData
+          ? firebase
+              .firestore()
+              .collection('users')
+              .doc(obj.uid)
+              .update(obj)
+              .then(
+                function () {
+                  const data = {
+                    success: true,
+                  };
+                  return data;
+                },
+                (error) => {
+                  const {message, code} = error;
+                  displayConsole('error message', message);
+                  displayConsole('error code', code);
+                  const data = {
+                    success: false,
+                    message: message,
+                  };
+                  return data;
+                },
+              )
+          : firebase
+              .firestore()
+              .collection('users')
+              .doc(obj.uid)
+              .set(obj)
+              .then(
+                function () {
+                  const data = {
+                    success: true,
+                  };
+                  return data;
+                },
+                (error) => {
+                  const {message, code} = error;
+                  displayConsole('error message', message);
+                  displayConsole('error code', code);
+                  const data = {
+                    success: false,
+                    message: message,
+                  };
+                  return data;
+                },
+              );
+      })
+      .catch((error) => {
+        const {message, code} = error;
+        displayConsole('error message', message);
+        displayConsole('error code', code);
+        const data = {
+          success: false,
+          message: message,
+        };
+        return data;
+      });
+  } catch (error) {
+    const data = {
+      success: false,
+    };
+    displayConsole('Crash error', error);
+    return data;
+  }
+}
 
 export function getUserData(obj, success, error) {
   try {
-    let userRef = firestore.doc(`${obj.tableName}/${obj.uid}`);
+    let userRef = firestore().doc(`${obj.tableName}/${obj.uid}`);
     return userRef.onSnapshot(success, error);
   } catch (error) {
     displayConsole('Crash error', error);
@@ -798,56 +800,56 @@ export function logout() {
 //   }
 // }
 
-// export function reAunthenticate(userProvidedPassword) {
-//   try {
-//     const user = firebase.auth().currentUser;
-//     const credential = firebase.auth.EmailAuthProvider.credential(
-//       user.email,
-//       userProvidedPassword,
-//     );
-//     return user
-//       .reauthenticateWithCredential(credential)
-//       .then(function () {
-//         const data = {
-//           success: true,
-//         };
-//         return data;
-//       })
-//       .catch(function (error) {
-//         const {message, code} = error;
-//         displayConsole('error message', message);
-//         displayConsole('error code', code);
-//         const data = {
-//           success: false,
-//           message,
-//         };
-//         displayConsole('data', data);
-//         return data;
-//       });
-//   } catch (error) {
-//     displayConsole('Crash error', error);
-//     return false;
-//   }
-// }
+export function reAunthenticate(userProvidedPassword) {
+  try {
+    const user = firebase.auth().currentUser;
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      userProvidedPassword,
+    );
+    return user
+      .reauthenticateWithCredential(credential)
+      .then(function () {
+        const data = {
+          success: true,
+        };
+        return data;
+      })
+      .catch(function (error) {
+        const {message, code} = error;
+        displayConsole('error message', message);
+        displayConsole('error code', code);
+        const data = {
+          success: false,
+          message,
+        };
+        displayConsole('data', data);
+        return data;
+      });
+  } catch (error) {
+    displayConsole('Crash error', error);
+    return false;
+  }
+}
 
-// export function changePassword(newPassword) {
-//   try {
-//     var user = firebase.auth().currentUser;
-//     return user
-//       .updatePassword(newPassword)
-//       .then(function () {
-//         return reAunthenticate(newPassword);
-//       })
-//       .catch(function (error) {
-//         const {message, code} = error;
-//         displayConsole('error message', message);
-//         displayConsole('error code', code);
-//       });
-//   } catch (error) {
-//     displayConsole('Crash error', error);
-//     return false;
-//   }
-// }
+export function changePasswordCall(newPassword) {
+  try {
+    var user = firebase.auth().currentUser;
+    return user
+      .updatePassword(newPassword)
+      .then(function () {
+        return reAunthenticate(newPassword);
+      })
+      .catch(function (error) {
+        const {message, code} = error;
+        displayConsole('error message', message);
+        displayConsole('error code', code);
+      });
+  } catch (error) {
+    displayConsole('Crash error', error);
+    return false;
+  }
+}
 
 // export const cipher = (salt) => {
 //   let textToChars = (text) => text.split('').map((c) => c.charCodeAt(0));
@@ -932,105 +934,106 @@ export function logout() {
 //     });
 // };
 
-// export const sendMessage = (obj) => {
-//   try {
-//     firebase
-//       .firestore()
-//       .collection(Constant.App.firebaseTableNames.messages)
-//       .doc(obj.id)
-//       .collection('chat')
-//       .doc()
-//       .set(obj.messageParams);
-//     const {userUnreadCount, expertUnreadCount} = obj.unreadCount;
-//     const updateData = {
-//       lastMessage: obj.lastMessage,
-//       modifiedDate: moment().unix(),
-//       userUnreadCount: userUnreadCount || 0,
-//       expertUnreadCount: expertUnreadCount || 0,
-//     };
-//     firebase
-//       .firestore()
-//       .collection(Constant.App.firebaseTableNames.questions)
-//       .doc(obj.questionId)
-//       .update(updateData);
-//   } catch (error) {
-//     displayConsole('Crash error', error);
-//   }
-// };
+export const sendMessage = (obj) => {
+  try {
+    firebase
+      .firestore()
+      .collection(Constant.App.firebaseTableNames.messages)
+      .doc(obj.id)
+      .collection('chat')
+      .doc()
+      .set(obj.messageParams);
+    const {userUnreadCount, expertUnreadCount} = obj.unreadCount;
+    const updateData = {
+      lastMessage: obj.lastMessage,
+      modifiedDate: moment().unix(),
+      userUnreadCount: userUnreadCount || 0,
+      expertUnreadCount: expertUnreadCount || 0,
+    };
+    firebase
+      .firestore()
+      .collection(Constant.App.firebaseTableNames.questions)
+      .doc(obj.questionId)
+      .update(updateData);
+  } catch (error) {
+    displayConsole('Crash error', error);
+  }
+};
 
-// export const loadMessages = (obj, success, error) => {
-//   let ref = firebase
-//     .firestore()
-//     .collection(Constant.App.firebaseTableNames.messages)
-//     .doc(`${obj.id}`)
-//     .collection('chat')
-//     .orderBy('createdAt', 'desc');
-//   return ref.onSnapshot(success, error);
-// };
+export const loadMessages = (obj, success, error) => {
+  let ref = firebase
+    .firestore()
+    .collection(Constant.App.firebaseTableNames.messages)
+    .doc(`${obj.id}`)
+    .collection('chat')
+    .orderBy('createdAt', 'desc');
+  console.log('LOAD MESSAGES', ref);
+  return ref.onSnapshot(success, error);
+};
 
-// export const checkStatus = (obj, success, error) => {
-//   let ref = firebase.firestore().collection('users').doc(`${obj.id}`);
-//   return ref.onSnapshot(success, error);
-// };
+export const checkStatus = (obj, success, error) => {
+  let ref = firebase.firestore().collection('users').doc(`${obj.id}`);
+  return ref.onSnapshot(success, error);
+};
 
-// export const checkQuestionStatus = (obj, success, error) => {
-//   let ref = firebase
-//     .firestore()
-//     .collection(Constant.App.firebaseTableNames.questions)
-//     .doc(`${obj.id}`);
-//   return ref.onSnapshot(success, error);
-// };
+export const checkQuestionStatus = (obj, success, error) => {
+  let ref = firebase
+    .firestore()
+    .collection(Constant.App.firebaseTableNames.questions)
+    .doc(`${obj.id}`);
+  return ref.onSnapshot(success, error);
+};
 
-// export function resolvedQuestion(obj) {
-//   try {
-//     displayConsole(
-//       '\n\n--------------**** resolvedQuestion Start ********-----------',
-//     );
-//     displayConsole('obj', obj);
-//     return firebase
-//       .firestore()
-//       .collection(Constant.App.firebaseTableNames.questions)
-//       .doc(`${obj.questionId}`)
-//       .set(obj)
-//       .then(
-//         function (success) {
-//           displayConsole('success', true);
-//           displayConsole('docref', success);
-//           const data = {
-//             success: true,
-//           };
-//           displayConsole('data', data);
-//           console.log(
-//             '--------------**** resolvedQuestion End ********-----------\n\n',
-//           );
-//           return data;
-//         },
-//         (error) => {
-//           const {message, code} = error;
-//           displayConsole('error message', message);
-//           displayConsole('error code', code);
-//           const data = {
-//             success: false,
-//             message: message,
-//           };
-//           displayConsole('data', data);
-//           displayConsole(
-//             '--------------***** resolvedQuestion End *********-----------\n\n',
-//           );
-//           return data;
-//         },
-//       );
-//   } catch (error) {
-//     const data = {
-//       success: false,
-//     };
-//     displayConsole('Crash error', error);
-//     displayConsole(
-//       '--------------**** resolvedQuestion End ********-----------\n\n',
-//     );
-//     return data;
-//   }
-// }
+export function resolvedQuestion(obj) {
+  try {
+    displayConsole(
+      '\n\n--------------**** resolvedQuestion Start ********-----------',
+    );
+    displayConsole('obj', obj);
+    return firebase
+      .firestore()
+      .collection(Constant.App.firebaseTableNames.questions)
+      .doc(`${obj.questionId}`)
+      .set(obj)
+      .then(
+        function (success) {
+          displayConsole('success', true);
+          displayConsole('docref', success);
+          const data = {
+            success: true,
+          };
+          displayConsole('data', data);
+          console.log(
+            '--------------**** resolvedQuestion End ********-----------\n\n',
+          );
+          return data;
+        },
+        (error) => {
+          const {message, code} = error;
+          displayConsole('error message', message);
+          displayConsole('error code', code);
+          const data = {
+            success: false,
+            message: message,
+          };
+          displayConsole('data', data);
+          displayConsole(
+            '--------------***** resolvedQuestion End *********-----------\n\n',
+          );
+          return data;
+        },
+      );
+  } catch (error) {
+    const data = {
+      success: false,
+    };
+    displayConsole('Crash error', error);
+    displayConsole(
+      '--------------**** resolvedQuestion End ********-----------\n\n',
+    );
+    return data;
+  }
+}
 
 // export const updateRefrealcodeForAllUsers = (uid, data) => {
 //   firebase
@@ -1054,13 +1057,13 @@ export const updateStatus = (obj) => {
   firebase.firestore().collection('users').doc(obj.uid).update(obj.updatedData);
 };
 
-// export const updateUnreadCount = (obj) => {
-//   firebase
-//     .firestore()
-//     .collection(Constant.App.firebaseTableNames.questions)
-//     .doc(obj.questionData.questionId)
-//     .update(obj.updateData);
-// };
+export const updateUnreadCount = (obj) => {
+  firebase
+    .firestore()
+    .collection(Constant.App.firebaseTableNames.questions)
+    .doc(obj.questionData.questionId)
+    .update(obj.updateData);
+};
 
 // export function saveQuestion(obj) {
 //   try {
@@ -1132,53 +1135,53 @@ export const updateStatus = (obj) => {
 //   }
 // }
 
-// export function updateReadMessageStatus(obj) {
-//   try {
-//     let batch = firestore.batch();
-//     let questionDocRef = firebase
-//       .firestore()
-//       .collection(Constant.App.firebaseTableNames.messages)
-//       .doc(obj.id)
-//       .collection('chat')
-//       .where(obj.key, '==', obj.value)
-//       .get();
-//     questionDocRef
-//       .then((querySnapshotQuestionDoc) => {
-//         querySnapshotQuestionDoc.docs.forEach((element) => {
-//           batch.update(element._ref, {
-//             isRead: true,
-//           });
-//         });
-//         batch
-//           .commit()
-//           .then((response) => {
-//             displayConsole('response', response);
-//             const data = {
-//               success: true,
-//             };
-//             displayConsole('response', data);
-//           })
-//           .catch((error) => {
-//             displayConsole('batch error', error);
-//             const {message, code} = error;
-//             displayConsole('batch error message', message);
-//             displayConsole('batch error code', code);
-//           });
-//       })
-//       .catch((error) => {
-//         displayConsole('questionDocRef error', error);
-//         const {message, code} = error;
-//         displayConsole('questionDocRef error message', message);
-//         displayConsole('questionDocRef error code', code);
-//       });
-//   } catch (error) {
-//     const data = {
-//       success: false,
-//     };
-//     displayConsole('Crash error', error);
-//     return data;
-//   }
-// }
+export function updateReadMessageStatus(obj) {
+  try {
+    let batch = firestore.batch();
+    let questionDocRef = firebase
+      .firestore()
+      .collection(Constant.App.firebaseTableNames.messages)
+      .doc(obj.id)
+      .collection('chat')
+      .where(obj.key, '==', obj.value)
+      .get();
+    questionDocRef
+      .then((querySnapshotQuestionDoc) => {
+        querySnapshotQuestionDoc.docs.forEach((element) => {
+          batch.update(element._ref, {
+            isRead: true,
+          });
+        });
+        batch
+          .commit()
+          .then((response) => {
+            displayConsole('response', response);
+            const data = {
+              success: true,
+            };
+            displayConsole('response', data);
+          })
+          .catch((error) => {
+            displayConsole('batch error', error);
+            const {message, code} = error;
+            displayConsole('batch error message', message);
+            displayConsole('batch error code', code);
+          });
+      })
+      .catch((error) => {
+        displayConsole('questionDocRef error', error);
+        const {message, code} = error;
+        displayConsole('questionDocRef error message', message);
+        displayConsole('questionDocRef error code', code);
+      });
+  } catch (error) {
+    const data = {
+      success: false,
+    };
+    displayConsole('Crash error', error);
+    return data;
+  }
+}
 // export function makeid() {
 //   var result = '';
 
@@ -1528,27 +1531,27 @@ export const updateStatus = (obj) => {
 //   }
 // }
 
-// export async function updateCredits(visits, {data}) {
-//   try {
-//     const docData = await firebase
-//       .firestore()
-//       .collection('users')
-//       .doc(data.uid)
-//       .get();
-//     const userData = docData.data();
-//     const paymentType = data.prepaid
-//       ? {prepaid: userData.prepaid + visits}
-//       : {visits: userData.visits + visits};
-//     await firebase
-//       .firestore()
-//       .collection('users')
-//       .doc(data.uid)
-//       .update(paymentType);
-//     return {ok: true};
-//   } catch (err) {
-//     return {ok: false, status: 'internal'};
-//   }
-// }
+export async function updateCredits(visits, {data}) {
+  try {
+    const docData = await firebase
+      .firestore()
+      .collection('users')
+      .doc(data.uid)
+      .get();
+    const userData = docData.data();
+    const paymentType = data.prepaid
+      ? {prepaid: userData.prepaid + visits}
+      : {visits: userData.visits + visits};
+    await firebase
+      .firestore()
+      .collection('users')
+      .doc(data.uid)
+      .update(paymentType);
+    return {ok: true};
+  } catch (err) {
+    return {ok: false, status: 'internal'};
+  }
+}
 
 // export async function getPayPalAccessToken() {
 //   try {
@@ -1603,16 +1606,16 @@ export const updateStatus = (obj) => {
 //   }
 // }
 
-// export async function getMedicalHistoryAsync(data) {
-//   const uid = data.payload;
-//   try {
-//     const document = firestore.collection('medicalHistory').doc(uid);
-//     const medicalHistory = await document.get();
-//     return medicalHistory.data();
-//   } catch (error) {
-//     return error;
-//   }
-// }
+export async function getMedicalHistoryAsync(data) {
+  const uid = data.payload;
+  try {
+    const document = firestore.collection('medicalHistory').doc(uid);
+    const medicalHistory = await document.get();
+    return medicalHistory.data();
+  } catch (error) {
+    return error;
+  }
+}
 
 // export const updateUserData = (updates, uid, merge = true) =>
 //   new Promise((resolve, reject) =>
@@ -1637,147 +1640,148 @@ export const updateStatus = (obj) => {
 //   }
 // }
 
-// export const firebaseSingleFetch = (collectionName, id) =>
-//   new Promise((resolve, reject) =>
-//     (async () => {
-//       try {
-//         const document = await firestore
-//           .collection(collectionName)
-//           .doc(id)
-//           .get();
-//         if (document.exists) {
-//           const data = document.data();
-//           resolve(data);
-//         } else {
-//           reject('Document not found.');
-//         }
-//       } catch (error) {
-//         reject(error);
-//       }
-//     })(),
-//   );
+export const firebaseSingleFetch = (collectionName, id) =>
+  new Promise((resolve, reject) =>
+    (async () => {
+      try {
+        const document = await firebase
+          .firestore()
+          .collection(collectionName)
+          .doc(id)
+          .get();
+        if (document.exists) {
+          const data = document.data();
+          resolve(data);
+        } else {
+          reject('Document not found.');
+        }
+      } catch (error) {
+        reject(error);
+      }
+    })(),
+  );
 
-// export const firebaseSingleUpdate = (id, collection, updates, merge = true) =>
-//   new Promise((resolve, reject) =>
-//     (async () => {
-//       const user = firestore.collection(collection).doc(id);
-//       try {
-//         await user.set(updates, {merge});
-//         resolve(updates);
-//       } catch (error) {
-//         reject(error);
-//       }
-//     })(),
-//   );
+export const firebaseSingleUpdate = (id, collection, updates, merge = true) =>
+  new Promise((resolve, reject) =>
+    (async () => {
+      const user = firestore().collection(collection).doc(id);
+      try {
+        await user.set(updates, {merge});
+        resolve(updates);
+      } catch (error) {
+        reject(error);
+      }
+    })(),
+  );
 
-// export const firebaseRealTimeFetch = (
-//   collectionName,
-//   conditions = [],
-//   onSucess,
-//   onError,
-// ) => {
-//   let query = firestore.collection(collectionName);
+export const firebaseRealTimeFetch = (
+  collectionName,
+  conditions = [],
+  onSucess,
+  onError,
+) => {
+  let query = firestore().collection(collectionName);
 
-//   for (let condition of conditions) {
-//     const {key, operator, value} = condition;
-//     query = query.where(key, operator, value);
-//   }
+  for (let condition of conditions) {
+    const {key, operator, value} = condition;
+    query = query.where(key, operator, value);
+  }
 
-//   query.onSnapshot(
-//     (snapshot) => {
-//       const data = snapshot.docs.map((item) => ({
-//         ...item.data(),
-//         id: item.id,
-//       }));
-//       if (data) {
-//         onSucess(data);
-//       }
-//     },
-//     (error) => {
-//       onError(error);
-//     },
-//   );
-// };
+  query.onSnapshot(
+    (snapshot) => {
+      const data = snapshot.docs.map((item) => ({
+        ...item.data(),
+        id: item.id,
+      }));
+      if (data) {
+        onSucess(data);
+      }
+    },
+    (error) => {
+      onError(error);
+    },
+  );
+};
 
-// export async function saveAndLock({payload}) {
-//   const {appointment} = payload;
-//   const {visit} = appointment;
+export async function saveAndLock({payload}) {
+  const {appointment} = payload;
+  const {visit} = appointment;
 
-//   try {
-//     lockPaitentRecord(visit);
-//     lockExpertRecord(visit);
-//     saveMedicalHistory(payload, visit);
-//     const update = {
-//       ...appointment,
-//       visit: {...visit, locked: true, complete: true},
-//     };
-//     return update;
-//   } catch (error) {
-//     console.log(error);
-//     return error;
-//   }
-// }
+  try {
+    lockPaitentRecord(visit);
+    lockExpertRecord(visit);
+    saveMedicalHistory(payload, visit);
+    const update = {
+      ...appointment,
+      visit: {...visit, locked: true, complete: true},
+    };
+    return update;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
 
-// async function lockPaitentRecord({uid, id}) {
-//   const document = firestore.collection('appointments').doc(uid);
-//   const appointments = await document.get();
-//   const appointmentList = appointments.data();
+async function lockPaitentRecord({uid, id}) {
+  const document = firestore.collection('appointments').doc(uid);
+  const appointments = await document.get();
+  const appointmentList = appointments.data();
 
-//   appointmentList.history.map((item) => {
-//     if (item.id === id) {
-//       item.locked = true;
-//       item.complete = true;
-//       return item;
-//     }
-//     return item;
-//   });
+  appointmentList.history.map((item) => {
+    if (item.id === id) {
+      item.locked = true;
+      item.complete = true;
+      return item;
+    }
+    return item;
+  });
 
-//   await document.set({...appointmentList}, {merge: true});
-// }
+  await document.set({...appointmentList}, {merge: true});
+}
 
-// async function lockExpertRecord({uid, id, expert}) {
-//   const document = firestore.collection('appointments').doc(expert.uid);
-//   const appointments = await document.get();
-//   const appointmentList = appointments.data();
+async function lockExpertRecord({uid, id, expert}) {
+  const document = firestore.collection('appointments').doc(expert.uid);
+  const appointments = await document.get();
+  const appointmentList = appointments.data();
 
-//   appointmentList.history[uid].map((item) => {
-//     if (item.id === id) {
-//       item.locked = true;
-//       item.complete = true;
-//       return item;
-//     }
-//     return item;
-//   });
+  appointmentList.history[uid].map((item) => {
+    if (item.id === id) {
+      item.locked = true;
+      item.complete = true;
+      return item;
+    }
+    return item;
+  });
 
-//   await document.set({history: {...appointmentList.history}}, {merge: true});
-// }
+  await document.set({history: {...appointmentList.history}}, {merge: true});
+}
 
-// async function saveMedicalHistory(payload, visit) {
-//   delete payload.loading;
-//   delete payload.error;
+async function saveMedicalHistory(payload, visit) {
+  delete payload.loading;
+  delete payload.error;
 
-//   try {
-//     const document = firestore.collection('medicalHistory').doc(visit.uid);
-//     const record = await document.get();
-//     const recordList = record.data();
+  try {
+    const document = firestore.collection('medicalHistory').doc(visit.uid);
+    const record = await document.get();
+    const recordList = record.data();
 
-//     if (recordList) {
-//       await document.set(
-//         {history: [...recordList.history, payload]},
-//         {merge: true},
-//       );
-//     } else {
-//       await firebase
-//         .firestore()
-//         .collection('medicalHistory')
-//         .doc(visit.uid)
-//         .set({history: [payload]});
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     return error;
-//   }
-// }
+    if (recordList) {
+      await document.set(
+        {history: [...recordList.history, payload]},
+        {merge: true},
+      );
+    } else {
+      await firebase
+        .firestore()
+        .collection('medicalHistory')
+        .doc(visit.uid)
+        .set({history: [payload]});
+    }
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
 
 // export async function setVideoVisitRating(data) {
 //   const {
@@ -1794,15 +1798,15 @@ export const updateStatus = (obj) => {
 //   );
 // }
 
-// export async function sendVisitRecap({payload}) {
-//   try {
-//     await functions.httpsCallable('sendMailNotificationOnMedicalRecordCreate')(
-//       payload,
-//     );
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
+export async function sendVisitRecap({payload}) {
+  try {
+    await functions.httpsCallable('sendMailNotificationOnMedicalRecordCreate')(
+      payload,
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 // export const updateSubscriptionPlan = ({subscriptionId, planId}) =>
 //   new Promise((resolve, reject) =>
@@ -1850,13 +1854,13 @@ export const updateStatus = (obj) => {
 //   }
 // }
 
-// export async function authorizeVideo(uid) {
-//   try {
-//     const token = await functions.httpsCallable('videoSessionJoin')({
-//       userName: uid,
-//     });
-//     return token;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
+export async function authorizeVideo(uid) {
+  try {
+    const token = await functions.httpsCallable('videoSessionJoin')({
+      userName: uid,
+    });
+    return token;
+  } catch (error) {
+    console.log(error);
+  }
+}

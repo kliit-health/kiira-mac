@@ -1,10 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, {useState} from 'react';
-import {View, Modal, FlatList, TouchableOpacity} from 'react-native';
-import CustomText from '../customText';
+import {View, Modal, FlatList, TouchableOpacity, Text} from 'react-native';
 import styles from './style';
 import CustomButton from '../customButton';
-import {SearchBar} from 'react-native-elements';
 
 const CustomSelectModal = (props) => {
   const [data, setData] = useState(props.data);
@@ -28,32 +26,9 @@ const CustomSelectModal = (props) => {
             )}
             ListEmptyComponent={() => (
               <View style={styles.emptyContainerStyle}>
-                <CustomText style={styles.emptyTextStyle}>
-                  {'No Data available'}
-                </CustomText>
+                <Text style={styles.emptyTextStyle}>{'No Data available'}</Text>
               </View>
             )}
-            ListHeaderComponent={
-              showSearch && (
-                <SearchBar
-                  containerStyle={styles.searchBarContaineStyle}
-                  inputContainerStyle={styles.searchBarInputContainerStyle}
-                  inputStyle={styles.searchBarInputTextStyle}
-                  placeholder="Search Here..."
-                  lightTheme
-                  onChangeText={(text) => {
-                    const newData = dataArr.filter((item) => {
-                      const itemData = item.value.toUpperCase();
-                      const textData = text.toUpperCase();
-                      return itemData.indexOf(textData) > -1;
-                    });
-                    setSearch(text);
-                    setData(newData);
-                  }}
-                  value={search}
-                />
-              )
-            }
             showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.code}
             renderItem={({item}) => (
@@ -65,10 +40,7 @@ const CustomSelectModal = (props) => {
                   onSelection(item);
                 }}
                 style={styles.stateTextContainerStyle}>
-                <CustomText style={styles.stateTextStyle}>
-                  {' '}
-                  {item.value}{' '}
-                </CustomText>
+                <Text style={styles.stateTextStyle}> {item.value} </Text>
               </TouchableOpacity>
             )}
           />

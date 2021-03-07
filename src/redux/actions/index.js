@@ -10,3 +10,4 @@ export {
 export {showApiLoader, hideApiLoader} from './apiLoader';
 export {getTermsAndConditions} from './termsAndConditions';
 export {signOut} from './signOut';
+export {updateUser, getUser} from './user';

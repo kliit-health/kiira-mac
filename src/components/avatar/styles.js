@@ -1,5 +1,4 @@
 import {StyleSheet} from 'react-native';
-import {colors} from '../../utils/constants';
 
 export default StyleSheet.create({
   deleteIcon: {
@@ -9,7 +8,7 @@ export default StyleSheet.create({
   root: {
     backgroundColor: 'transparent',
     alignSelf: 'flex-start',
-    borderColor: colors.purple,
+    borderColor: 'purple',
   },
   status: {
     position: 'absolute',
@@ -100,13 +99,13 @@ export const modifiers = {
 
   online: {
     status: {
-      backgroundColor: colors.green,
+      backgroundColor: 'green',
     },
   },
 
   offline: {
     status: {
-      backgroundColor: colors.gray,
+      backgroundColor: 'gray',
     },
   },
   deleteMode: {

@@ -1,22 +1,23 @@
 import {StyleSheet} from 'react-native';
-import Constant from '../../utils/constants';
-import metrices from '../../utils/metrices';
+import {text, colors, metrics} from '../../utils/constants';
 
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center',
     justifyContent: 'center',
-    width: metrices.DEVICE_WIDTH,
-    paddingVertical: 40,
-    backgroundColor: Constant.App.colors.blueColor,
+    width: metrics.width / 2 - 80,
+    paddingVertical: 15,
+    backgroundColor: colors.blue,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
 
   headerText: {
-    color: Constant.App.colors.whiteColor,
-    fontSize: Constant.App.textSize.xxLarge,
-    fontFamily: Constant.App.fontFamily.headerBold,
+    color: colors.white,
+    fontSize: text.size.xxLarge,
+    fontFamily: text.fontFamily.poppinsBold,
     fontWeight: '500',
   },
 

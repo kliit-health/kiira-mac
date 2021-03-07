@@ -1,21 +1,16 @@
-import React, {useState, useEffect, Fragment} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
 import {Text, View, Image, TextInput, TouchableOpacity} from 'react-native';
 import {loginApi} from '../../redux/actions';
+import IsLoadingHOC from '../../hoc/isLoading';
 
 import styles from './styles';
 
-export default function Auth({navigation}) {
+export const Auth = ({setLoading, navigation}) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [secretPassword, setSecretPassword] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
-  const loggedInStatus = useSelector((state) => state.login.loggedIn);
-
-  useEffect(() => {
-    setLoggedIn(false);
-  }, []);
 
   const handlePasswordChange = (input) => {
     if (input.length > password.length) {
@@ -31,6 +26,7 @@ export default function Auth({navigation}) {
   };
 
   const handleLogin = () => {
+    setLoading(true);
     const data = {
       params: {
         email: email.trim(),
@@ -39,7 +35,6 @@ export default function Auth({navigation}) {
       navigation,
     };
     dispatch(loginApi(data));
-    setLoggedIn(true);
     setPassword('');
     setEmail('');
     setSecretPassword('');
@@ -51,38 +46,35 @@ export default function Auth({navigation}) {
         style={styles.image}
         source={require('../../../assets/logo-sm.png')}
       />
-      {!loggedInStatus && (
-        <Fragment>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.TextInput}
-              placeholder="Email"
-              placeholderTextColor="#003f5c"
-              onChangeText={(email) => setEmail(email)}
-              value={email}
-            />
-          </View>
 
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.TextInput}
-              placeholder="Password"
-              placeholderTextColor="#003f5c"
-              secureTextEntry={true}
-              onChangeText={(input) => handlePasswordChange(input)}
-              value={password}
-            />
-          </View>
-        </Fragment>
-      )}
+      <>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Email"
+            placeholderTextColor="#003f5c"
+            onChangeText={(email) => setEmail(email)}
+            value={email}
+          />
+        </View>
 
-      <TouchableOpacity>
-        <Text style={styles.forgot_button}>Forgot Password?</Text>
-      </TouchableOpacity>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Password"
+            placeholderTextColor="#003f5c"
+            secureTextEntry={true}
+            onChangeText={(input) => handlePasswordChange(input)}
+            value={password}
+          />
+        </View>
+      </>
 
       <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
         <Text style={styles.loginText}>LOGIN</Text>
       </TouchableOpacity>
     </View>
   );
-}
+};
+
+export default IsLoadingHOC(Auth);

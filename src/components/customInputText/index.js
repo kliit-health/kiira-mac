@@ -42,6 +42,7 @@ class FloatingLabel extends PureComponent {
           {
             paddingTop: this.state.paddingAnim,
             opacity: this.state.opacityAnim,
+            color: 'black',
           },
         ]}>
         {this.props.children}

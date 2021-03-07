@@ -1,10 +1,8 @@
 import React from 'react';
 import {shape, object, bool, string, func, number, oneOf} from 'prop-types';
 import {View, TouchableOpacity, Image} from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {mergeStyles} from '../../utils/functions';
 import defaultStyles, {modifiers} from './styles';
-import Remove from '../../svgs/remove.svg';
 
 const Avatar = ({
   styles: customStyles,
@@ -54,19 +52,14 @@ const Avatar = ({
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={activeOpacity}>
       <View onLayout={handleLayout} style={styles.root}>
-        <FastImage
+        <Image
           style={styles.image}
-          source={{uri: source ? source : null}}
+          source={require('../../../assets/profile_img_placeholder.png')}
           fallback={true}
           resizeMode={resizeMode}
           defaultSource={require('../../../assets/profile_img_placeholder.png')}
         />
         <View style={styles.status} />
-        {deleteMode && (
-          <View style={styles.deleteIcon}>
-            <Remove {...modifiers[size].delete} />
-          </View>
-        )}
       </View>
     </TouchableOpacity>
   );
