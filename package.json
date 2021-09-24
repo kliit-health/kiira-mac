@@ -21,7 +21,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "react": "16.11.0",
-    "react-native": "0.62.0",
+    "react-native": "0.64.0",
     "react-native-calendars": "^1.1252.0",
     "react-native-elements": "^3.2.0",
     "react-native-error-boundary": "^1.1.6",
