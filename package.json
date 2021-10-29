@@ -25,7 +25,7 @@
     "react-native-calendars": "^1.1252.0",
     "react-native-elements": "^3.2.0",
     "react-native-error-boundary": "^1.1.6",
-    "react-native-macos": "^0.62.0-0",
+    "react-native-macos": "^0.64.3",
     "react-native-reanimated": "^1.13.2",
     "react-native-render-html": "^5.1.0",
     "react-native-root-modal": "^5.0.0",
